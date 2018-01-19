@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  user: one
-  subject: MyString
-  description: MyText
+health:
+  user: test_user
+  subject: health
+  description: I pray for better health
 
-two:
-  user: two
-  subject: MyString
-  description: MyText
+wealth:
+  user: another_user
+  subject: wealth
+  description: I pray for more wealth

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PrayerRequestsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @prayer_request = prayer_requests(:one)
+    @prayer_request = prayer_requests(:health)
   end
 
   test "should get index" do

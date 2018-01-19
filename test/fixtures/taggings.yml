@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  prayer_request: one
-  tag: one
+  prayer_request: health
+  tag: spiritual
 
 two:
-  prayer_request: two
-  tag: two
+  prayer_request: wealth
+  tag: financial

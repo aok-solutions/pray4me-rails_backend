@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  user: one
-  name: MyString
+spiritual:
+  user: test_user
+  name: spiritual
 
-two:
-  user: two
-  name: MyString
+financial:
+  user: another_user
+  name: financial

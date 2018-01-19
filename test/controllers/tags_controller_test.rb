@@ -2,7 +2,7 @@ require 'test_helper'
 
 class TagsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @tag = tags(:one)
+    @tag = tags(:financial)
   end
 
   test "should get index" do
@@ -12,7 +12,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create tag" do
     assert_difference('Tag.count') do
-      post tags_url, params: { tag: { name: @tag.name, user_id: @tag.user_id } }, as: :json
+      post tags_url, params: { tag: { name: 'praise', user_id: @tag.user_id } }, as: :json
     end
 
     assert_response 201
@@ -24,7 +24,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update tag" do
-    patch tag_url(@tag), params: { tag: { name: @tag.name, user_id: @tag.user_id } }, as: :json
+    patch tag_url(@tag), params: { tag: { name: 'sorrow', user_id: @tag.user_id } }, as: :json
     assert_response 200
   end
 
