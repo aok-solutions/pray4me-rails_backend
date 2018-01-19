@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
-  resources :tags
-  resources :prayer_requests
+  resources :tags do
+    get :prayer_requests, on: :member
+  end
+
+  resources :prayer_requests do
+    get :tags, on: :member
+  end
+
   resources :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

@@ -1,5 +1,5 @@
 class PrayerRequestsController < ApplicationController
-  before_action :set_prayer_request, only: [:show, :update, :destroy]
+  before_action :set_prayer_request, only: [:show, :tags, :update, :destroy]
 
   # GET /prayer_requests
   def index
@@ -11,6 +11,11 @@ class PrayerRequestsController < ApplicationController
   # GET /prayer_requests/1
   def show
     render json: @prayer_request
+  end
+
+  # GET /prayer_requests/1/tags
+  def tags
+    @prayer_request.tags
   end
 
   # POST /prayer_requests
