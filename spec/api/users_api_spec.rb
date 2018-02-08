@@ -29,7 +29,7 @@ describe UsersController do
     end
 
     it 'returns 404 if user not found' do
-      get "/users/1"
+      get "/users/invalid"
 
       expect(response).to be_not_found
     end
@@ -68,7 +68,7 @@ describe UsersController do
     end
 
     it 'returns 404 if user not found' do
-      put "/users/1", params: update_username
+      put "/users/invalid", params: update_username
 
       expect(response).to be_not_found
     end
@@ -83,15 +83,16 @@ describe UsersController do
   end
 
   describe 'DELETE users#destroy' do
-    it 'updates the user attribute' do
+    it 'deletes the user' do
       user = User.last
       delete "/users/#{user.id}"
 
       expect(User.all.count).to eq(2)
+      expect(User.pluck(:id)).not_to include(user.id)
     end
 
     it 'returns 404 if user not found' do
-      delete "/users/1"
+      delete "/users/invalid"
 
       expect(response).to be_not_found
       expect(User.all.count).to eq(3)
