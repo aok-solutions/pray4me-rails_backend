@@ -1,5 +1,5 @@
 class TagsController < ApplicationController
-  before_action :set_tag, only: [:show, :prayer_requests, :update, :destroy]
+  before_action :set_tag, only: [:show, :update, :destroy]
 
   # GET /tags
   def index
@@ -51,6 +51,6 @@ class TagsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def tag_params
-      params.require(:tag).permit(:user_id, :name)
+      params.require(:tag).permit(:name)
     end
 end

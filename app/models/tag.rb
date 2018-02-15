@@ -1,8 +1,5 @@
 class Tag < ApplicationRecord
-  belongs_to :user
+  has_and_belongs_to_many :prayer_requests
 
-  has_many :taggings, dependent: :destroy
-  has_many :prayer_requests, through: :taggings
-
-  validates :name, presence: true, uniqueness: { scope: :user_id }
+  validates :name, presence: true, uniqueness: true
 end
