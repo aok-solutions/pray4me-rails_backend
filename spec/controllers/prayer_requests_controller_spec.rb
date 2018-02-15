@@ -13,7 +13,7 @@ describe PrayerRequestsController do
 
   describe 'GET prayer_requests#index' do
     it 'retrieves all prayer requests' do
-      get "/prayer_requests"
+      get :index
       prayer_requests_response = JSON.parse(response.body)
 
       expect(response).to be_success
@@ -24,7 +24,7 @@ describe PrayerRequestsController do
   describe 'GET prayer_requests#show' do
     it 'retrieves prayer request by ID' do
       prayer_request = PrayerRequest.last
-      get "/prayer_requests/#{prayer_request.id}"
+      get :show, params: {id: prayer_request.id}
       prayer_requests_response = JSON.parse(response.body)
 
       expect(response).to be_success
@@ -32,7 +32,7 @@ describe PrayerRequestsController do
     end
 
     it 'returns 404 if prayer request not found' do
-      get "/prayer_requests/invalid"
+      get :show, params: {id: "invalid"}
 
       expect(response).to be_not_found
     end
@@ -49,7 +49,7 @@ describe PrayerRequestsController do
           description: description
       }}
 
-      post "/prayer_requests", params: new_prayer_request
+      post :create, params: new_prayer_request
       prayer_requests_response = JSON.parse(response.body)
 
       expect(response).to be_created
@@ -58,7 +58,7 @@ describe PrayerRequestsController do
     end
 
     it 'returns 422 if validation error' do
-      post "/prayer_requests", params: {prayer_request: {subject: subject, description: description}}
+      post :create, params: {prayer_request: {subject: subject, description: description}}
 
       expect(response.status).to eq(422)
     end
@@ -66,11 +66,8 @@ describe PrayerRequestsController do
 
   describe 'PUT prayer_requests#update' do
     description = Faker::HitchhikersGuideToTheGalaxy.quote
-    update_description = {prayer_request: {description: description}}
-
     it 'updates the prayer request attribute' do
-      prayer_request = PrayerRequest.last
-      put "/prayer_requests/#{prayer_request.id}", params: update_description
+      put :update, params: {id: PrayerRequest.last.id, prayer_request: {description: description}}
       prayer_requests_response = JSON.parse(response.body)
 
       expect(response).to be_success
@@ -78,14 +75,13 @@ describe PrayerRequestsController do
     end
 
     it 'returns 404 if prayer request not found' do
-      put "/prayer_requests/invalid", params: update_description
+      put :update, params: {id: "invalid", prayer_request: {description: description}}
 
       expect(response).to be_not_found
     end
 
     it 'returns 422 if validation error' do
-      prayer_request = PrayerRequest.last
-      put "/prayer_requests/#{prayer_request.id}", params: {prayer_request: {user_id: nil}}
+      put :update, params: {id: PrayerRequest.last.id, prayer_request: {user_id: nil}}
 
       expect(response.status).to eq(422)
     end
@@ -94,24 +90,17 @@ describe PrayerRequestsController do
   describe 'DELETE prayer_requests#destroy' do
     it 'deletes the prayer request' do
       prayer_request = PrayerRequest.last
-      delete "/prayer_requests/#{prayer_request.id}"
+      delete :destroy, params: {id: prayer_request.id}
 
       expect(PrayerRequest.all.count).to eq(2)
       expect(PrayerRequest.pluck(:id)).not_to include(prayer_request.id)
     end
 
     it 'returns 404 if prayer request not found' do
-      delete "/prayer_requests/invalid"
+      delete :destroy, params: {id: "invalid"}
 
       expect(response).to be_not_found
       expect(PrayerRequest.all.count).to eq(3)
-    end
-
-    it 'deletes the prayer request if user is deleted' do
-      delete "/users/#{@user.id}"
-
-      expect(User.all.count).to eq(0)
-      expect(PrayerRequest.all.count).to eq(0)
     end
   end
 end

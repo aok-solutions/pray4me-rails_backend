@@ -10,7 +10,7 @@ describe UsersController do
 
   describe 'GET users#index' do
     it 'retrieves all users' do
-      get "/users"
+      get :index
       users_response = JSON.parse(response.body)
 
       expect(response).to be_success
@@ -21,7 +21,7 @@ describe UsersController do
   describe 'GET users#show' do
     it 'retrieves user by ID' do
       user = User.last
-      get "/users/#{user.id}"
+      get :show, params: {id: user.id}
       users_response = JSON.parse(response.body)
 
       expect(response).to be_success
@@ -29,9 +29,10 @@ describe UsersController do
     end
 
     it 'returns 404 if user not found' do
-      get "/users/invalid"
+      get :show, params: {id: "invalid"}
 
       expect(response).to be_not_found
+      expect(response.content_type).to eq('application/json')
     end
   end
 
@@ -39,7 +40,7 @@ describe UsersController do
     new_user = {user: {username: "marvin", email: "marvin@android.com"}}
 
     it 'creates a new user' do
-      post "/users", params: new_user
+      post :create, params: new_user
       users_response = JSON.parse(response.body)
 
       expect(response).to be_created
@@ -49,18 +50,17 @@ describe UsersController do
 
     it 'returns 422 if validation error' do
       last_user = User.last
-      post "/users", params: {user: {username: last_user.username, email: last_user.email}}
+      post :create, params: {user: {username: last_user.username, email: last_user.email}}
 
-      expect(response.status).to eq(422)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
     end
   end
 
   describe 'PUT users#update' do
-    update_username = {user: {username: "marvin"}}
-
     it 'updates the user attribute' do
       user = User.last
-      put "/users/#{user.id}", params: update_username
+      put :update, params: {id: user.id, user: {username: "marvin"}}
       users_response = JSON.parse(response.body)
 
       expect(response).to be_success
@@ -68,33 +68,36 @@ describe UsersController do
     end
 
     it 'returns 404 if user not found' do
-      put "/users/invalid", params: update_username
+      put :update, params: {id: "invalid", user: {username: "marvin"}}
 
       expect(response).to be_not_found
+      expect(response.content_type).to eq('application/json')
     end
 
     it 'returns 422 if validation error' do
       last_user = User.last
       user = create :user, username: create_username
-      put "/users/#{user.id}", params: {user: {username: last_user.username}}
+      put :update, params: {id: user.id, user: {username: last_user.username}}
 
-      expect(response.status).to eq(422)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq('application/json')
     end
   end
 
   describe 'DELETE users#destroy' do
     it 'deletes the user' do
       user = User.last
-      delete "/users/#{user.id}"
+      delete :destroy, params: {id: user.id}
 
       expect(User.all.count).to eq(2)
       expect(User.pluck(:id)).not_to include(user.id)
     end
 
     it 'returns 404 if user not found' do
-      delete "/users/invalid"
+      delete :destroy, params: {id: "invalid"}
 
       expect(response).to be_not_found
+      expect(response.content_type).to eq('application/json')
       expect(User.all.count).to eq(3)
     end
   end
