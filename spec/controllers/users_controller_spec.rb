@@ -36,6 +36,27 @@ describe UsersController do
     end
   end
 
+  describe 'GET users#prayer_requests' do
+    it 'retrieves users prayer requests' do
+      user = User.last
+      create :prayer_request, user_id: user.id
+      get :prayer_requests, params: {id: user.id}
+
+      prayer_request_response = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/json')
+      expect(prayer_request_response.length).to eq(1)
+    end
+
+    it 'returns 404 if user not found' do
+      get :prayer_requests, params: {id: "invalid"}
+
+      expect(response).to be_not_found
+      expect(response.content_type).to eq('application/json')
+    end
+  end
+
   describe 'POST users#create' do
     new_user = {user: {username: "marvin", email: "marvin@android.com"}}
 
